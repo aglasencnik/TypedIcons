@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/TypedIcons.Cli/TypedIcons.Cli.csproj" />
+    <Project Path="src/TypedIcons.Core/TypedIcons.Core.csproj" />
+    <Project Path="src/TypedIcons.Generator/TypedIcons.Generator.csproj" />
   </Folder>
 </Solution>
