@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TypedIcons.Cli/TypedIcons.Cli.csproj" />
+  </Folder>
+</Solution>
