@@ -4,4 +4,7 @@
     <Project Path="src/TypedIcons.Core/TypedIcons.Core.csproj" />
     <Project Path="src/TypedIcons.Generator/TypedIcons.Generator.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TypedIcons.Tests/TypedIcons.Tests.csproj" />
+  </Folder>
 </Solution>
