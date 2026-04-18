@@ -7,4 +7,10 @@
         <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\TypedIcons.Generator\TypedIcons.Generator.csproj" 
+                        OutputItemType="Analyzer"
+                        ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
 </Project>
