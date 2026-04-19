@@ -1,5 +1,9 @@
 # TypedIcons
 
+<p align="center">
+  <img src="Icon.png" alt="TypedIcons logo" width="128" height="128" />
+</p>
+
 > [!WARNING]
 > This project is in early development and is not yet functional.
 
@@ -34,3 +38,5 @@ This project is licensed under the [MIT License](https://github.com/aglasencnik/
 ## Acknowledgment
 
 This project is built with the help of Iconify icon sets and API.
+
+Project icon designed by [ThatSebastjan](https://github.com/ThatSebastjan).
