@@ -1,19 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <RollForward>Major</RollForward>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+        <PackageId>TypedIcons</PackageId>
+        <Version>0.1.0-alpha.1</Version>
+        <Title>TypedIcons CLI</Title>
+        <Description>.NET CLI tool for adding and managing type-safe Iconify icons for Blazor projects. Works with the TypedIcons source generator to provide IntelliSense and compile-time safety.</Description>
+
+        <Authors>Amadej Glasenčnik</Authors>
+        <Copyright>© Amadej Glasenčnik 2026.</Copyright>
+
+        <PackageProjectUrl>https://github.com/aglasencnik/TypedIcons</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/aglasencnik/TypedIcons.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <PackageTags>blazor icons iconify cli dotnet tool csharp</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>typedicons</ToolCommandName>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TypedIcons.Core\TypedIcons.Core.csproj" />
+        <ProjectReference Include="..\TypedIcons.Core\TypedIcons.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Spectre.Console" Version="0.55.2" />
-      <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
+        <PackageReference Include="Spectre.Console" Version="0.55.2"/>
+        <PackageReference Include="Spectre.Console.Cli" Version="0.55.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="">
+            <Link>LICENSE</Link>
+        </None>
+        <None Include="..\..\README.md" Pack="true" PackagePath="">
+            <Link>README.md</Link>
+        </None>
     </ItemGroup>
 
 </Project>
