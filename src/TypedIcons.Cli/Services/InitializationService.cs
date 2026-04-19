@@ -1,5 +1,6 @@
 using CliWrap;
 using Spectre.Console;
+using TypedIcons.Core;
 
 namespace TypedIcons.Cli.Services;
 
@@ -18,7 +19,7 @@ public class InitializationService
         
         AnsiConsole.MarkupLine($"[green]Found project:[/] {Path.GetFileName(csproj)}");
 
-        var metadataPath = Path.Combine(currentDirectory, "typedicons.json");
+        var metadataPath = Path.Combine(currentDirectory, TypedIconsDefaults.ConfigFileName);
         if (!File.Exists(metadataPath))
         {
             await File.WriteAllTextAsync(metadataPath, "{ \"icons\": [] }", cancellationToken);
