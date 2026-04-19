@@ -20,10 +20,11 @@ var app = new CommandApp(registrar);
 app.Configure(config =>
 {
     config.SetApplicationName("typedicons");
-    config.SetApplicationVersion("0.1.0-alpha.2");
+    config.SetApplicationVersion("0.1.0-alpha.3");
     
     config.AddCommand<InitCommand>("init");
     config.AddCommand<AddCommand>("add");
+    config.AddCommand<RestoreCommand>("restore");
 });
 
 return await app.RunAsync(args);
