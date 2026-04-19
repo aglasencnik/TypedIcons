@@ -4,10 +4,10 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
-        
+
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IsRoslynComponent>true</IsRoslynComponent>
-        
+
         <PackageId>TypedIcons.Generator</PackageId>
         <Version>0.1.0-alpha.1</Version>
         <Title>TypedIcons.Generator</Title>
@@ -15,22 +15,24 @@
 
         <Authors>Amadej Glasenčnik</Authors>
         <Copyright>© Amadej Glasenčnik 2026.</Copyright>
-        
+
         <PackageProjectUrl>https://github.com/aglasencnik/TypedIcons</PackageProjectUrl>
         <RepositoryUrl>https://github.com/aglasencnik/TypedIcons.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        
+
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        
+
         <PackageTags>blazor icons iconify source-generator roslyn dotnet csharp intellisense</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        
+
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <NoWarn>$(NoWarn);NU5128</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\TypedIcons.Core\TypedIcons.Core.csproj"/>
+        <ProjectReference Include="..\TypedIcons.Core\TypedIcons.Core.csproj"
+                          PrivateAssets="all"
+                          ReferenceOutputAssembly="false"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -38,7 +40,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -57,6 +59,11 @@
             <PackagePath>analyzers/dotnet/cs</PackagePath>
             <Visible>false</Visible>
         </None>
+        <None Include="..\TypedIcons.Core\bin\$(Configuration)\netstandard2.0\TypedIcons.Core.dll">
+            <Pack>True</Pack>
+            <PackagePath>analyzers/dotnet/cs</PackagePath>
+            <Visible>false</Visible>
+        </None>
     </ItemGroup>
-    
+
 </Project>
