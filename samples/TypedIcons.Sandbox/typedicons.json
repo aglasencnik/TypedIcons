@@ -1,0 +1,84 @@
+{
+  "icons": [
+    {
+      "set": "mdi",
+      "name": "home"
+    },
+    {
+      "set": "mdi",
+      "name": "account"
+    },
+    {
+      "set": "mdi",
+      "name": "settings"
+    },
+    {
+      "set": "mdi",
+      "name": "bell"
+    },
+    {
+      "set": "mdi",
+      "name": "magnify"
+    },
+    {
+      "set": "ph",
+      "name": "user-circle"
+    },
+    {
+      "set": "ph",
+      "name": "gear"
+    },
+    {
+      "set": "ph",
+      "name": "chart-line"
+    },
+    {
+      "set": "ph",
+      "name": "heart"
+    },
+    {
+      "set": "ph",
+      "name": "chat-circle"
+    },
+    {
+      "set": "lucide",
+      "name": "menu"
+    },
+    {
+      "set": "lucide",
+      "name": "search"
+    },
+    {
+      "set": "lucide",
+      "name": "calendar"
+    },
+    {
+      "set": "lucide",
+      "name": "upload"
+    },
+    {
+      "set": "lucide",
+      "name": "download"
+    },
+    {
+      "set": "tabler",
+      "name": "dashboard"
+    },
+    {
+      "set": "tabler",
+      "name": "activity"
+    },
+    {
+      "set": "tabler",
+      "name": "message"
+    },
+    {
+      "set": "tabler",
+      "name": "photo"
+    },
+    {
+      "set": "tabler",
+      "name": "logout"
+    }
+  ]
+}
