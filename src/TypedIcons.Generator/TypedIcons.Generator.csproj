@@ -9,7 +9,7 @@
         <IsRoslynComponent>true</IsRoslynComponent>
 
         <PackageId>TypedIcons.Generator</PackageId>
-        <Version>0.1.0-alpha.3</Version>
+        <Version>0.1.0-alpha.4</Version>
         <Title>TypedIcons.Generator</Title>
         <Description>Type-safe icons for Blazor with IntelliSense and compile-time safety. Powered by a .NET tool and source generator, using Iconify icon sets without string-based names.</Description>
 
@@ -32,8 +32,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\TypedIcons.Core\TypedIcons.Core.csproj"
-                          PrivateAssets="all"
-                          ReferenceOutputAssembly="false"/>
+                          PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -42,28 +41,36 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.7" PrivateAssets="all" GeneratePathProperty="true"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\..\LICENSE" Pack="true" PackagePath="">
-            <Link>LICENSE</Link>
-        </None>
-        <None Include="..\..\README.md" Pack="true" PackagePath="">
-            <Link>README.md</Link>
-        </None>
-        <None Include="..\..\Icon.png" Pack="true" PackagePath="">
-            <Link>Icon.png</Link>
-        </None>
-        <None Include="$(OutputPath)/$(AssemblyName).dll">
-            <Pack>True</Pack>
-            <PackagePath>analyzers/dotnet/cs</PackagePath>
-            <Visible>false</Visible>
-        </None>
-        <None Include="..\TypedIcons.Core\bin\$(Configuration)\netstandard2.0\TypedIcons.Core.dll">
-            <Pack>True</Pack>
-            <PackagePath>analyzers/dotnet/cs</PackagePath>
-            <Visible>false</Visible>
-        </None>
+        <!-- Pack all output DLLs (generator + TypedIcons.Core) into the NuGet analyzer folder -->
+        <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <!-- Pack System.Text.Json explicitly since it won't be in OutputPath -->
+        <None Include="$(PkgSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="" Link="LICENSE"/>
+        <None Include="..\..\README.md" Pack="true" PackagePath="" Link="README.md"/>
+        <None Include="..\..\Icon.png" Pack="true" PackagePath="" Link="Icon.png"/>
+    </ItemGroup>
+
+    <!-- Register dependencies for project-reference consumers (not NuGet) -->
+    <PropertyGroup>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+    </PropertyGroup>
+
+    <Target Name="GetDependencyTargetPaths">
+        <ItemGroup>
+            <TargetPathWithTargetPlatformMoniker
+                    Include="$(ProjectDir)..\TypedIcons.Core\$(OutputPath)\*.dll"
+                    IncludeRuntimeDependency="false"/>
+            <TargetPathWithTargetPlatformMoniker
+                    Include="$(PkgSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll"
+                    IncludeRuntimeDependency="false"/>
+        </ItemGroup>
+    </Target>
 
 </Project>

@@ -20,7 +20,7 @@ var app = new CommandApp(registrar);
 app.Configure(config =>
 {
     config.SetApplicationName("typedicons");
-    config.SetApplicationVersion("0.1.0-alpha.3");
+    config.SetApplicationVersion("0.1.0-alpha.4");
     
     config.AddCommand<InitCommand>("init");
     config.AddCommand<AddCommand>("add");
