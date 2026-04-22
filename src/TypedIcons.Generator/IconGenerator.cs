@@ -13,6 +13,9 @@ public class IconGenerator : IIncrementalGenerator
             ctx.AddSource("IconData.g.cs", SourceText.From(CodeTemplates.IconDataClass, Encoding.UTF8)));
         
         context.RegisterPostInitializationOutput(ctx =>
+            ctx.AddSource("Icon.g.cs", SourceText.From(CodeTemplates.IconComponent, Encoding.UTF8)));
+        
+        context.RegisterPostInitializationOutput(ctx =>
             ctx.AddSource("Icons.g.cs", SourceText.From(CodeTemplates.EmptyIconsClass, Encoding.UTF8)));
     }
 }
