@@ -14,11 +14,11 @@ public class IconGeneratorTests
         var generator = new IconGenerator();
 
         var configuration = File.ReadAllText("TestData/typedicons.json");
-        var cache = File.ReadAllText("TestData/cache.json");
+        var cache = File.ReadAllText("TestData/typedicons.cache.json");
 
         var additionalFiles = ImmutableArray.Create<AdditionalText>(
             new InMemoryAdditionalText("typedicons.json", configuration),
-            new InMemoryAdditionalText("cache.json", cache)
+            new InMemoryAdditionalText("typedicons.cache.json", cache)
         );
         
         var compilation = CSharpCompilation.Create(
