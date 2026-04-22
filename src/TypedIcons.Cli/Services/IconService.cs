@@ -46,6 +46,11 @@ public class IconService(IconifyService iconifyService, InitializationService in
 
         var configContent = await File.ReadAllTextAsync(configPath, cancellationToken);
         var config = JsonSerializer.Deserialize<IconConfig>(configContent, _jsonSerializerOptions);
+        if (config is null)
+        {
+            AnsiConsole.MarkupLine($"[red]{TypedIconsDefaults.ConfigFileName} was not found or it couldn't be parsed[/]");
+            return false;
+        }
 
         if (config.Icons.Any(x =>
                 string.Equals(x.Set, iconSet, StringComparison.OrdinalIgnoreCase) &&
@@ -80,7 +85,7 @@ public class IconService(IconifyService iconifyService, InitializationService in
             ? await File.ReadAllTextAsync(cachePath, cancellationToken)
             : "{}";
 
-        var cache = JsonSerializer.Deserialize<IconCache>(cacheContent, _jsonSerializerOptions);
+        var cache = JsonSerializer.Deserialize<IconCache>(cacheContent, _jsonSerializerOptions) ?? new IconCache();
         cache.Icons[iconifyName] = iconSvg;
 
         await File.WriteAllTextAsync(cachePath, JsonSerializer.Serialize(cache, _jsonSerializerOptions),
@@ -102,6 +107,11 @@ public class IconService(IconifyService iconifyService, InitializationService in
 
         var configContent = await File.ReadAllTextAsync(configPath, cancellationToken);
         var config = JsonSerializer.Deserialize<IconConfig>(configContent, _jsonSerializerOptions);
+        if (config is null)
+        {
+            AnsiConsole.MarkupLine($"[red]{TypedIconsDefaults.ConfigFileName} was not found or it couldn't be parsed[/]");
+            return false;
+        }
 
         var cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "obj", TypedIconsDefaults.CacheFolderName);
         if (!Directory.Exists(cacheDir))
@@ -112,7 +122,7 @@ public class IconService(IconifyService iconifyService, InitializationService in
             ? await File.ReadAllTextAsync(cachePath, cancellationToken)
             : "{}";
 
-        var cache = JsonSerializer.Deserialize<IconCache>(cacheContent, _jsonSerializerOptions);
+        var cache = JsonSerializer.Deserialize<IconCache>(cacheContent, _jsonSerializerOptions) ?? new IconCache();
 
         await AnsiConsole.Status()
             .StartAsync("Restoring icons...", async ctx =>

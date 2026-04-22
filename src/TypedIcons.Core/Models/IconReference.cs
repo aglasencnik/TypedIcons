@@ -1,8 +1,8 @@
 namespace TypedIcons.Core.Models;
 
-public record struct IconReference
+public class IconReference
 {
-    public string Set { get; set; }
+    public string Set { get; set; } = string.Empty;
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
