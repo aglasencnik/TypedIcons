@@ -1,6 +1,8 @@
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using TypedIcons.Generator;
+using TypedIcons.Tests.Helpers;
 
 namespace TypedIcons.Tests;
 
@@ -10,13 +12,23 @@ public class IconGeneratorTests
     public void DebugGenerator()
     {
         var generator = new IconGenerator();
+
+        var configuration = File.ReadAllText("TestData/typedicons.json");
+        var cache = File.ReadAllText("TestData/cache.json");
+
+        var additionalFiles = ImmutableArray.Create<AdditionalText>(
+            new InMemoryAdditionalText("typedicons.json", configuration),
+            new InMemoryAdditionalText("cache.json", cache)
+        );
         
         var compilation = CSharpCompilation.Create(
             assemblyName: nameof(IconGeneratorTests),
             references: [MetadataReference.CreateFromFile(typeof(object).Assembly.Location)]
         );
 
-        var driver = CSharpGeneratorDriver.Create(generator);
+        var driver = CSharpGeneratorDriver
+            .Create(generator)
+            .AddAdditionalTexts(additionalFiles);
 
         var result = driver.RunGenerators(compilation).GetRunResult();
 
