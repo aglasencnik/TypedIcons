@@ -1,9 +1,6 @@
 <Project>
     <ItemGroup>
-        <AdditionalFiles Include="typedicons.json"
-                         Condition="Exists('typedicons.json')"/>
-
-        <AdditionalFiles Include="$(BaseIntermediateOutputPath)TypedIcons\typedicons.cache.json"
-                         Condition="Exists('$(BaseIntermediateOutputPath)TypedIcons\typedicons.cache.json')"/>
+        <AdditionalFiles Include="typedicons.json" />
+        <AdditionalFiles Include="$(BaseIntermediateOutputPath)TypedIcons\typedicons.cache.json" />
     </ItemGroup>
 </Project>
