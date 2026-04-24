@@ -9,7 +9,7 @@
         <IsRoslynComponent>true</IsRoslynComponent>
 
         <PackageId>TypedIcons.Generator</PackageId>
-        <Version>0.1.0-alpha.5</Version>
+        <Version>0.1.0-alpha.6</Version>
         <Title>TypedIcons.Generator</Title>
         <Description>Type-safe icons for Blazor with IntelliSense and compile-time safety. Powered by a .NET tool and source generator, using Iconify icon sets without string-based names.</Description>
 

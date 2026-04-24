@@ -15,69 +15,64 @@ namespace TypedIcons.Generator;
 [Generator]
 public class IconGenerator : IIncrementalGenerator
 {
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new()
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
     };
-    
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(ctx =>
-            ctx.AddSource("IconData.g.cs", SourceText.From(CodeTemplates.IconDataClass, Encoding.UTF8)));
-
-        context.RegisterPostInitializationOutput(ctx =>
-            ctx.AddSource("Icon.g.cs", SourceText.From(CodeTemplates.IconComponent, Encoding.UTF8)));
-
-        context.RegisterPostInitializationOutput(ctx =>
-            ctx.AddSource("Icons.g.cs", SourceText.From(CodeTemplates.EmptyIconsClass, Encoding.UTF8)));
-        
-        var configFile = context.AdditionalTextsProvider
-            .Where(f => Path.GetFileName(f.Path) == TypedIconsDefaults.ConfigFileName);
-
-        var cacheFile = context.AdditionalTextsProvider
-            .Where(f => Path.GetFileName(f.Path) == TypedIconsDefaults.CacheFileName);
-
-        var provider = configFile.Collect().Combine(cacheFile.Collect());
-
-        context.RegisterSourceOutput(provider, (ctx, files) =>
         {
-            var (configFiles, cacheFiles) = files;
-            Generate(ctx, configFiles.AddRange(cacheFiles));
+            ctx.AddSource("IconData.g.cs", SourceText.From(CodeTemplates.IconDataClass, Encoding.UTF8));
+            ctx.AddSource("Icon.g.cs", SourceText.From(CodeTemplates.IconComponent, Encoding.UTF8));
+            ctx.AddSource("Icons.g.cs", SourceText.From(CodeTemplates.EmptyIconsClass, Encoding.UTF8));
         });
+
+        var configText = context.AdditionalTextsProvider
+            .Where(f => Path.GetFileName(f.Path) == TypedIconsDefaults.ConfigFileName)
+            .Select((f, ct) => f.GetText(ct)?.ToString());
+
+        var cacheText = context.AdditionalTextsProvider
+            .Where(f => Path.GetFileName(f.Path) == TypedIconsDefaults.CacheFileName)
+            .Select((f, ct) => f.GetText(ct)?.ToString());
+
+        var provider = configText.Collect().Combine(cacheText.Collect());
+
+        context.RegisterSourceOutput(provider, Generate);
     }
 
-    private void Generate(SourceProductionContext context, ImmutableArray<AdditionalText> files)
+    private static void Generate(SourceProductionContext context,
+        (ImmutableArray<string?> ConfigContents, ImmutableArray<string?> CacheContents) files)
     {
-        var configFileText = files
-            .FirstOrDefault(f => Path.GetFileName(f.Path) is TypedIconsDefaults.ConfigFileName)?
-            .GetText(context.CancellationToken)?
-            .ToString();
+        var configFileText = files.ConfigContents.FirstOrDefault();
+        var cacheFileText = files.CacheContents.FirstOrDefault();
 
-        if (configFileText is null)
+        if (configFileText is null || cacheFileText is null)
             return;
 
-        var cacheFileText = files
-            .FirstOrDefault(f => Path.GetFileName(f.Path) is TypedIconsDefaults.CacheFileName)?
-            .GetText(context.CancellationToken)?
-            .ToString();
-        
-        if (cacheFileText is null)
-            return;
+        IconConfig? config;
+        IconCache? cache;
 
-        var config = JsonSerializer.Deserialize<IconConfig>(configFileText, _jsonSerializerOptions);
-        var cache = JsonSerializer.Deserialize<IconCache>(cacheFileText, _jsonSerializerOptions);
-        
+        try
+        {
+            config = JsonSerializer.Deserialize<IconConfig>(configFileText, JsonSerializerOptions);
+            cache = JsonSerializer.Deserialize<IconCache>(cacheFileText, JsonSerializerOptions);
+        }
+        catch
+        {
+            return;
+        }
+
         if (config is null || cache is null)
             return;
 
         var iconSets = config.Icons.GroupBy(x => x.Set);
         foreach (var iconSet in iconSets)
         {
-            var iconSetName = iconSet.Key;
-            var pascalIconSetName = ToPascalCase(iconSetName);
-
+            var pascalIconSetName = ToPascalCase(iconSet.Key);
             var fieldStringBuilder = new StringBuilder();
 
             foreach (var iconReference in iconSet)
@@ -85,8 +80,8 @@ public class IconGenerator : IIncrementalGenerator
                 var iconifyName = $"{iconReference.Set}:{iconReference.Name}";
                 if (!cache.Icons.TryGetValue(iconifyName, out var iconCache) || iconCache is null)
                     continue;
-                
-                XDocument? doc;
+
+                XDocument doc;
                 try
                 {
                     doc = XDocument.Parse(iconCache);
@@ -99,11 +94,11 @@ public class IconGenerator : IIncrementalGenerator
                 var svg = doc.Root;
                 if (svg is null)
                     continue;
-                
+
                 var viewBox = svg.Attribute("viewBox")?.Value ?? "0 0 24 24";
                 var width = svg.Attribute("width")?.Value ?? "1em";
                 var height = svg.Attribute("height")?.Value ?? "1em";
-                var content = string.Concat(svg?.Nodes() ?? []).Trim();
+                var content = string.Concat(svg.Nodes()).Trim();
 
                 fieldStringBuilder.AppendLine(
                     CodeTemplates.IconSetClassFieldTemplate
@@ -114,20 +109,20 @@ public class IconGenerator : IIncrementalGenerator
                         .Replace("{{height}}", Escape(height))
                 );
             }
-            
+
             var iconSetClass = CodeTemplates.IconSetClassTemplate
                 .Replace("{{className}}", pascalIconSetName)
                 .Replace("{{fields}}", fieldStringBuilder.ToString().TrimEnd());
-            
+
             context.AddSource($"{pascalIconSetName}.Icons.g.cs", SourceText.From(iconSetClass, Encoding.UTF8));
         }
     }
 
     private static string ToPascalCase(string input)
     {
-        if  (string.IsNullOrEmpty(input))
+        if (string.IsNullOrEmpty(input))
             return input;
-        
+
         var parts = input.Split(['-', '_', ' ', '.'], StringSplitOptions.RemoveEmptyEntries);
         var result = new StringBuilder();
 
@@ -149,12 +144,12 @@ public class IconGenerator : IIncrementalGenerator
 
         return result.ToString();
     }
-    
+
     private static string Escape(string input)
     {
         if (string.IsNullOrEmpty(input))
             return input;
-        
+
         return input
             .Replace("\\", "\\\\")
             .Replace("\"", "\\\"")
