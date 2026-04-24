@@ -4,5 +4,7 @@ public static class TypedIconsDefaults
 {
     public const string ConfigFileName = "typedicons.json";
 
+    public const string CacheFolderName = "TypedIcons";
+    
     public const string CacheFileName = "typedicons.cache.json";
 }

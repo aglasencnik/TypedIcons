@@ -76,7 +76,11 @@ public class IconService(IconifyService iconifyService, InitializationService in
         await File.WriteAllTextAsync(configPath, JsonSerializer.Serialize(config, _jsonSerializerOptions),
             cancellationToken);
 
-        var cachePath = Path.Combine(Directory.GetCurrentDirectory(), "obj", TypedIconsDefaults.CacheFileName);
+        var cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "obj", TypedIconsDefaults.CacheFolderName);
+        if (!Directory.Exists(cacheDir))
+            Directory.CreateDirectory(cacheDir);
+
+        var cachePath = Path.Combine(cacheDir, TypedIconsDefaults.CacheFileName);
         var cacheContent = File.Exists(cachePath)
             ? await File.ReadAllTextAsync(cachePath, cancellationToken)
             : "{}";
@@ -105,11 +109,16 @@ public class IconService(IconifyService iconifyService, InitializationService in
         var config = JsonSerializer.Deserialize<IconConfig>(configContent, _jsonSerializerOptions);
         if (config is null)
         {
-            AnsiConsole.MarkupLine($"[red]{TypedIconsDefaults.ConfigFileName} was not found or it couldn't be parsed[/]");
+            AnsiConsole.MarkupLine(
+                $"[red]{TypedIconsDefaults.ConfigFileName} was not found or it couldn't be parsed[/]");
             return false;
         }
 
-        var cachePath = Path.Combine(Directory.GetCurrentDirectory(), "obj", TypedIconsDefaults.CacheFileName);
+        var cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "obj", TypedIconsDefaults.CacheFolderName);
+        if (!Directory.Exists(cacheDir))
+            Directory.CreateDirectory(cacheDir);
+
+        var cachePath = Path.Combine(cacheDir, TypedIconsDefaults.CacheFileName);
         var cacheContent = File.Exists(cachePath)
             ? await File.ReadAllTextAsync(cachePath, cancellationToken)
             : "{}";
