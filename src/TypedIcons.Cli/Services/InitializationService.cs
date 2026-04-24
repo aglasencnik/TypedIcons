@@ -32,7 +32,7 @@ public class InitializationService
         if (!File.Exists(configPath))
         {
             await File.WriteAllTextAsync(
-                configPath, 
+                configPath,
                 JsonSerializer.Serialize(new IconConfig(), _jsonSerializerOptions),
                 cancellationToken
             );
@@ -43,6 +43,15 @@ public class InitializationService
             AnsiConsole.MarkupLine("[yellow]typedicons.json already exists[/]");
             return true;
         }
+
+        var cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "obj", TypedIconsDefaults.CacheFolderName);
+        if (!Directory.Exists(cacheDir))
+            Directory.CreateDirectory(cacheDir);
+
+        var cachePath = Path.Combine(cacheDir, TypedIconsDefaults.CacheFileName);
+        await File.WriteAllTextAsync(cachePath, JsonSerializer.Serialize(new IconCache(), _jsonSerializerOptions),
+            cancellationToken);
+        AnsiConsole.MarkupLine("[green]Created cache file[/]");
 
         var installGenerator = confirmPrompts ||
                                await AnsiConsole.ConfirmAsync("Do you want to install the TypedIcons source generator?",
