@@ -65,6 +65,12 @@ public class InitializationService
 </ItemGroup>")
                 .BorderColor(Color.Grey)
                 .Header("Add to your .csproj manually"));
+
+            AnsiConsole.MarkupLine("\n[blue]Also add to[/] [grey]Components/_Imports.razor[/][blue]:[/]");
+            AnsiConsole.Write(new Panel("@using TypedIcons")
+                .BorderColor(Color.Grey)
+                .Header("Add to Components/_Imports.razor manually"));
+
             return true;
         }
 
@@ -90,7 +96,50 @@ public class InitializationService
             return false;
         }
 
-        AnsiConsole.MarkupLine("[green]Package installed successfully[/]");
+        AnsiConsole.MarkupLine("[green]Source generator package installed successfully[/]");
+
+        var addImport = confirmPrompts ||
+                        await AnsiConsole.ConfirmAsync(
+                            "Do you want to automatically add [grey]@using TypedIcons[/] to [grey]Components/_Imports.razor[/]?",
+                            cancellationToken: cancellationToken);
+
+        if (!addImport)
+        {
+            AnsiConsole.MarkupLine("\n[blue]Add manually to[/] [grey]Components/_Imports.razor[/][blue]:[/]");
+            AnsiConsole.Write(new Panel("@using TypedIcons")
+                .BorderColor(Color.Grey)
+                .Header("Add to Components/_Imports.razor manually"));
+        }
+        else
+        {
+            var importsPath = Path.Combine(currentDirectory, "Components", "_Imports.razor");
+
+            if (!File.Exists(importsPath))
+            {
+                AnsiConsole.MarkupLine($"[yellow]Components/_Imports.razor not found, skipping.[/]");
+                AnsiConsole.MarkupLine("\n[blue]Add manually:[/]");
+                AnsiConsole.Write(new Panel("@using TypedIcons")
+                    .BorderColor(Color.Grey)
+                    .Header("Add to Components/_Imports.razor manually"));
+            }
+            else
+            {
+                var importsContent = await File.ReadAllTextAsync(importsPath, cancellationToken);
+                const string usingDirective = "@using TypedIcons";
+
+                if (importsContent.Split('\n').Select(l => l.Trim()).Any(l => l == usingDirective))
+                {
+                    AnsiConsole.MarkupLine("[yellow]@using TypedIcons already present in _Imports.razor[/]");
+                }
+                else
+                {
+                    await File.AppendAllTextAsync(importsPath,
+                        $"{Environment.NewLine}{usingDirective}", cancellationToken);
+                    AnsiConsole.MarkupLine("[green]Added @using TypedIcons to Components/_Imports.razor[/]");
+                }
+            }
+        }
+
         AnsiConsole.MarkupLine("[green]TypedIcons initialized successfully[/]");
 
         return true;
