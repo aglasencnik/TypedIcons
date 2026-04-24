@@ -1,28 +1,41 @@
+using System.Text.Json;
 using CliWrap;
 using Spectre.Console;
 using TypedIcons.Core;
+using TypedIcons.Core.Models;
 
 namespace TypedIcons.Cli.Services;
 
 public class InitializationService
 {
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new()
+    {
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+    };
+
     public async Task<bool> InitializeAsync(bool confirmPrompts, CancellationToken cancellationToken)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
-        
+
         var csproj = Directory.GetFiles(currentDirectory, "*.csproj").FirstOrDefault();
         if (csproj is null)
         {
             AnsiConsole.MarkupLine("[red]No .csproj found in current directory[/]");
             return false;
         }
-        
+
         AnsiConsole.MarkupLine($"[green]Found project:[/] {Path.GetFileName(csproj)}");
 
-        var metadataPath = Path.Combine(currentDirectory, TypedIconsDefaults.ConfigFileName);
-        if (!File.Exists(metadataPath))
+        var configPath = Path.Combine(currentDirectory, TypedIconsDefaults.ConfigFileName);
+        if (!File.Exists(configPath))
         {
-            await File.WriteAllTextAsync(metadataPath, "{ \"icons\": [] }", cancellationToken);
+            await File.WriteAllTextAsync(
+                configPath, 
+                JsonSerializer.Serialize(new IconConfig(), _jsonSerializerOptions),
+                cancellationToken
+            );
             AnsiConsole.MarkupLine("[green]Created typedicons.json[/]");
         }
         else
@@ -32,8 +45,8 @@ public class InitializationService
         }
 
         var installGenerator = confirmPrompts ||
-            await AnsiConsole.ConfirmAsync("Do you want to install the TypedIcons source generator?",
-                cancellationToken: cancellationToken);
+                               await AnsiConsole.ConfirmAsync("Do you want to install the TypedIcons source generator?",
+                                   cancellationToken: cancellationToken);
 
         if (!installGenerator)
         {
@@ -45,11 +58,11 @@ public class InitializationService
                 .Header("Add to your .csproj manually"));
             return true;
         }
-        
+
         AnsiConsole.MarkupLine("[grey]Installing package...[/]");
 
         CommandResult result;
-        
+
         try
         {
             result = await CliWrap.Cli.Wrap("dotnet")
@@ -70,7 +83,7 @@ public class InitializationService
 
         AnsiConsole.MarkupLine("[green]Package installed successfully[/]");
         AnsiConsole.MarkupLine("[green]TypedIcons initialized successfully[/]");
-        
+
         return true;
     }
 }
