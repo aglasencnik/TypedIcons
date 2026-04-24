@@ -66,7 +66,7 @@ public class InitializationService
         try
         {
             result = await CliWrap.Cli.Wrap("dotnet")
-                .WithArguments("package add TypedIcons.Generator --prerelease")
+                .WithArguments("add package TypedIcons.Generator --prerelease")
                 .ExecuteAsync(cancellationToken);
         }
         catch
