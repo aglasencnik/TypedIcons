@@ -33,12 +33,19 @@ public class IconGenerator : IIncrementalGenerator
         context.RegisterPostInitializationOutput(ctx =>
             ctx.AddSource("Icons.g.cs", SourceText.From(CodeTemplates.EmptyIconsClass, Encoding.UTF8)));
         
-        var provider = context.AdditionalTextsProvider
-            .Where(f =>
-                Path.GetFileName(f.Path) is TypedIconsDefaults.ConfigFileName or TypedIconsDefaults.CacheFileName)
-            .Collect();
+        var configFile = context.AdditionalTextsProvider
+            .Where(f => Path.GetFileName(f.Path) == TypedIconsDefaults.ConfigFileName);
 
-        context.RegisterSourceOutput(provider, Generate);
+        var cacheFile = context.AdditionalTextsProvider
+            .Where(f => Path.GetFileName(f.Path) == TypedIconsDefaults.CacheFileName);
+
+        var provider = configFile.Collect().Combine(cacheFile.Collect());
+
+        context.RegisterSourceOutput(provider, (ctx, files) =>
+        {
+            var (configFiles, cacheFiles) = files;
+            Generate(ctx, configFiles.AddRange(cacheFiles));
+        });
     }
 
     private void Generate(SourceProductionContext context, ImmutableArray<AdditionalText> files)

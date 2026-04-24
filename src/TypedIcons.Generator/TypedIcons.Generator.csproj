@@ -9,7 +9,7 @@
         <IsRoslynComponent>true</IsRoslynComponent>
 
         <PackageId>TypedIcons.Generator</PackageId>
-        <Version>0.1.0-alpha.4</Version>
+        <Version>0.1.0-alpha.5</Version>
         <Title>TypedIcons.Generator</Title>
         <Description>Type-safe icons for Blazor with IntelliSense and compile-time safety. Powered by a .NET tool and source generator, using Iconify icon sets without string-based names.</Description>
 
@@ -49,6 +49,8 @@
         <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
         <!-- Pack System.Text.Json explicitly since it won't be in OutputPath -->
         <None Include="$(PkgSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <!-- Pack .props -->
+        <None Include="build\TypedIcons.Generator.props" Pack="true" PackagePath="build\" />
     </ItemGroup>
 
     <ItemGroup>
