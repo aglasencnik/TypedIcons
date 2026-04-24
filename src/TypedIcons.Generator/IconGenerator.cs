@@ -117,7 +117,7 @@ public class IconGenerator : IIncrementalGenerator
             
             var iconSetClass = CodeTemplates.IconSetClassTemplate
                 .Replace("{{className}}", pascalIconSetName)
-                .Replace("{{fields}}", fieldStringBuilder.ToString());
+                .Replace("{{fields}}", fieldStringBuilder.ToString().TrimEnd());
             
             context.AddSource($"{pascalIconSetName}.Icons.g.cs", SourceText.From(iconSetClass, Encoding.UTF8));
         }
