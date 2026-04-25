@@ -1,8 +1,6 @@
 # TypedIcons
 
-<p align="center">
-  <img src="Icon.png" alt="TypedIcons logo" width="128" height="128" />
-</p>
+![TypedIcons logo](Icon.png)
 
 **TypedIcons** is a tool for using Iconify icons in Blazor with full type safety and IntelliSense support.
 
