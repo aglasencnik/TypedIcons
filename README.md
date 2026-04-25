@@ -1,6 +1,6 @@
 # TypedIcons
 
-![TypedIcons logo](Icon.png)
+![TypedIcons logo](https://raw.githubusercontent.com/aglasencnik/TypedIcons/refs/heads/main/Icon.png)
 
 **TypedIcons** is a tool for using Iconify icons in Blazor with full type safety and IntelliSense support.
 

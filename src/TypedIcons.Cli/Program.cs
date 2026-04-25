@@ -20,7 +20,7 @@ var app = new CommandApp(registrar);
 app.Configure(config =>
 {
     config.SetApplicationName("typedicons");
-    config.SetApplicationVersion("0.1.0-alpha.10");
+    config.SetApplicationVersion("0.1.0-alpha.11");
     
     config.AddCommand<InitCommand>("init")
         .WithDescription("Initialize TypedIcons in the current project");
