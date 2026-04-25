@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: |
+        dotnet restore src/TypedIcons.Cli/TypedIcons.Cli.csproj --verbosity minimal
+        dotnet restore src/TypedIcons.Generator/TypedIcons.Generator.csproj --verbosity minimal
+
+    - name: Build & Pack CLI
+      run: |
+        dotnet build src/TypedIcons.Cli/TypedIcons.Cli.csproj --configuration Release --verbosity minimal
+        dotnet pack src/TypedIcons.Cli/TypedIcons.Cli.csproj --configuration Release --no-build --verbosity minimal --output ./nupkgs
+
+    - name: Build & Pack Generator
+      run: |
+        dotnet build src/TypedIcons.Generator/TypedIcons.Generator.csproj --configuration Release --verbosity minimal
+        dotnet pack src/TypedIcons.Generator/TypedIcons.Generator.csproj --configuration Release --no-build --verbosity minimal --output ./nupkgs
+
+    - name: Push to NuGet Test
+      run: dotnet nuget push ./nupkgs/*.nupkg \
+        --api-key ${{ secrets.NUGET_API_KEY }} \
+        --source https://apiint.nugettest.org/v3/index.json \
+        --skip-duplicate
