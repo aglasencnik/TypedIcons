@@ -32,5 +32,5 @@ jobs:
         dotnet build src/TypedIcons.Generator/TypedIcons.Generator.csproj --configuration Release --verbosity minimal
         dotnet pack src/TypedIcons.Generator/TypedIcons.Generator.csproj --configuration Release --no-build --verbosity minimal --output ./nupkgs
 
-    - name: Push to NuGet Test
-      run: dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://apiint.nugettest.org/v3/index.json --skip-duplicate
+    - name: Push to NuGet
+      run: dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
