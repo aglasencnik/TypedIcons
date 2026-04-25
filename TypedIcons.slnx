@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/DevOps/">
+    <File Path=".github\workflows\ci.yml" />
+  </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/TypedIcons.Sandbox/TypedIcons.Sandbox.csproj" />
   </Folder>

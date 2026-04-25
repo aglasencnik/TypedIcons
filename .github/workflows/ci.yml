@@ -9,24 +9,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src
 
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
       
-    - name: Setup .NET 8
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore --verbosity minimal
+      run: |
+        dotnet restore src/TypedIcons.Cli/TypedIcons.Cli.csproj --verbosity minimal
+        dotnet restore src/TypedIcons.Generator/TypedIcons.Generator.csproj --verbosity minimal
 
-    - name: Build solution
-      run: dotnet build --configuration Release --no-restore  --verbosity minimal
+    - name: Build CLI
+      run: dotnet build src/TypedIcons.Cli/TypedIcons.Cli.csproj --configuration Release --no-restore --verbosity minimal
+
+    - name: Build Generator
+      run: dotnet build src/TypedIcons.Generator/TypedIcons.Generator.csproj --configuration Release --no-restore --verbosity minimal
 
     # - name: Test solution
     #   run: dotnet test --configuration Release --no-restore --no-build --verbosity minimal
