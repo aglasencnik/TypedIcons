@@ -6,7 +6,7 @@ using TypedIcons.Cli.Services;
 
 var services = new ServiceCollection();
 
-services.AddHttpClient("iconify", (serviceProvider, client) =>
+services.AddHttpClient("iconify", (_, client) =>
 {
     client.BaseAddress = new Uri("https://api.iconify.design");
 });
@@ -20,11 +20,16 @@ var app = new CommandApp(registrar);
 app.Configure(config =>
 {
     config.SetApplicationName("typedicons");
-    config.SetApplicationVersion("0.1.0-alpha.7");
+    config.SetApplicationVersion("0.1.0-alpha.8");
     
-    config.AddCommand<InitCommand>("init");
-    config.AddCommand<AddCommand>("add");
-    config.AddCommand<RestoreCommand>("restore");
+    config.AddCommand<InitCommand>("init")
+        .WithDescription("Initialize TypedIcons in the current project");
+    
+    config.AddCommand<AddCommand>("add")
+        .WithDescription("Add an icon by name (<set>:<icon>)");
+    
+    config.AddCommand<RestoreCommand>("restore")
+        .WithDescription("Restore icons in the local cache");
 });
 
 return await app.RunAsync(args);
